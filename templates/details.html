@@ -1,0 +1,85 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Post content-->
+            <article>
+                <!-- Post header-->
+                <header class="mb-4">
+                    <!-- Post title-->
+                    <h3 class="fw-bolder mb-1">
+                        {{article.title}}
+                    </h3>
+                    <!-- Author-->
+                    <p class="lead">
+                        by
+                        {{article.author.username}}
+                    </p>
+                    <!-- Post meta content-->
+                    <p>
+                        {{article.created_date}}
+                    </p>
+                    <hr>
+                    {% if article.article_image %}
+                        <img class="img-fluid rounded" src="{{article.article_image.url}}" alt="">
+                    {% endif %}
+                    <!-- Post content-->
+                    <p class="fs-5 mb-4">
+                        {{article.content | safe}}
+                    </p>
+                </article>
+                <hr>
+
+                <h3> Yorumlar </h3>
+                {% if comments %}
+                    {% for comment in comments %}
+                        <div class="d-flex">
+                            <div class="flex-shrink-0"><img
+                                class="rounded-circle"
+                                src="https://avatars.mds.yandex.net/i?id=b1ee450148ce5f5905d29e31a3cd2e53-5679824-images-thumbs&n=13"
+                                alt="..."/></div>
+                            <div class="ms-3">
+                                <div class="fw-bold"><h6>{{comment.comment_author}}</h6></div>
+                                <small>{{comment.comment_date}}</small><br>
+                                {{comment.comment_content}}
+                                <hr>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="alert alert-danger">
+                        Bu makaleye herhangi bir yorum yapılmadı ilk yorum yapan siz olun. :)
+                    </div>
+                {% endif %}
+                <!--Comment-->
+                <div class="card my-4">
+                    <h5 class="card-header">Yorum Ekle</h5>
+                    <div class="card-body">
+                        <form method="post" action="{% url 'article:comments' article.id %}">
+                            <form>
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label for="formGroupExampleInput">İsminizi Girin:</label>
+                                    <input
+                                        name="comment_author"
+                                        type="text"
+                                        class="form-control"
+                                        id="formGroupExampleInput"
+                                        placeholder="">
+                                </div>
+                                <label for="formGroupExampleInput">Yorum:</label>
+                                <textarea
+                                    name="comment_content"
+                                    class="form-control"
+                                    rows="3"
+                                    placeholder="Haydi sende yorumunu bizimle paylaş!!!"></textarea>
+                                <br>
+                                <button type="submit" class="btn btn-dark">Yayınla</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endblock body %}

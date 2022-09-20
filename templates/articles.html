@@ -1,0 +1,75 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+
+    <div class="row">
+        <div class="col-md-10 offset-md-0">
+            <h1>
+                Makaleler
+            </h1>
+            <hr>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-10 offset-md-0">
+            <div class="col-lg-8">
+                <form>
+                    {% csrf_token %}
+                    <input
+                        type="text"
+                        name="keyword"
+                        class="input-sm"
+                        maxlength="64"
+                        placeholder="Ara"/>
+                    <button type="submit" class="btn btn-dark btn-sm">Ara</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <br>
+    <br>
+    {% if articles %}
+        {% for article in articles %}
+            <div class="row">
+                <div class="col-lg-8">
+                    <!-- Post content-->
+                    <article>
+                        <!-- Post header-->
+                        <header class="mb-4">
+                            <!-- Post title-->
+                            <a href="{% url 'article:details' article.id %}">
+                                <h3 class="fw-bolder mb-1">
+                                    {{article.title}}
+                                </h3>
+                            </a>
+                            <!-- Author-->
+                            <p class="lead">
+                                {{article.author.username}},Tarafından Oluşturuldu.
+                            </p>
+                            <!-- Post meta content-->
+                            <p>
+                                {{article.created_date}}
+                            </p>
+                            <hr>
+                            {% if article.article_image %}
+                                <a href="/articles/article/{{article.id}}"><img class="img-fluid rounded" src="{{article.article_image.url}}" alt=""></a>
+                            {% endif %}
+                            <!-- Post content-->
+                            <p class="fs-5 mb-4">
+                                {{article.content | safe | truncatewords:10}}
+                            </p>
+                            <a href="{% url 'article:details' article.id %}">Devamını Oku</a>
+                            <hr>
+                            <br>
+                            
+                        </article>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-danger">
+                Makale Bulunamadı
+            </div>
+        {% endif %}
+
+    {% endblock body %}
